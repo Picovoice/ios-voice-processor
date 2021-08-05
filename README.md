@@ -44,3 +44,9 @@ do {
 ```swift
 voiceProcessor.stop()
 ```
+
+## Example
+
+To run the example, go to [Example](/Example).
+
+Run `pod install` and then open the Example directory in xcode. Then run it in your device or simulator.
