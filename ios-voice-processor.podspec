@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'ios-voice-processor'
-  s.version          = '1.0.0'
+  s.version          = '1.0.1'
   s.summary          = 'A cocoapod library for real-time voice processing.'
   s.description      = <<-DESC
 A voice processing library for ios. Has basic functionality to check record permissions, start recording, stop recording and processor
@@ -20,11 +20,10 @@ frames while recording.
   s.license          = { :type => 'Apache', :file => 'LICENSE' }
   s.author           = { 'ksyeo1010' => 'kyeo@picovoice.ai' }
   s.source           = { :git => 'https://github.com/Picovoice/ios-voice-processor.git', :tag => s.version.to_s }
-  s.social_media_url = 'https://picovoice.ai/'
 
   s.ios.deployment_target = '9.0'
-
+  s.swift_version = '5.0'
   s.source_files = 'VoiceProcessor.swift'
-
   s.frameworks = 'AVFoundation'
+  
 end

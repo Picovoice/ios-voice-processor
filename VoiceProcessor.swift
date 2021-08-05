@@ -18,11 +18,11 @@ public class VoiceProcessor {
     
     public func hasPermissions() throws -> Bool {
         let audioSession = AVAudioSession.sharedInstance()
-        if audioSession.recordPermission() == .denied {
+        if audioSession.recordPermission == .denied {
             return false
         }
         
-        try audioSession.setCategory(AVAudioSessionCategoryPlayAndRecord, with: [.mixWithOthers, .defaultToSpeaker, .allowBluetooth])
+        try audioSession.setCategory(AVAudioSession.Category.playAndRecord, options: [.mixWithOthers, .defaultToSpeaker, .allowBluetooth])
         
         return true
     }
