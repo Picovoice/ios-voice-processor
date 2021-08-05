@@ -5,9 +5,4 @@ platform :ios, '9.0'
 target 'ios-voice-processor_Example' do
   pod 'ios-voice-processor', :path => '../'
 
-  target 'ios-voice-processor_Tests' do
-    inherit! :search_paths
-
-    
-  end
 end

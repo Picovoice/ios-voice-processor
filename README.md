@@ -1,29 +1,46 @@
 # ios-voice-processor
 
-[![CI Status](https://img.shields.io/travis/ksyeo1010/ios-voice-processor.svg?style=flat)](https://travis-ci.org/ksyeo1010/ios-voice-processor)
-[![Version](https://img.shields.io/cocoapods/v/ios-voice-processor.svg?style=flat)](https://cocoapods.org/pods/ios-voice-processor)
-[![License](https://img.shields.io/cocoapods/l/ios-voice-processor.svg?style=flat)](https://cocoapods.org/pods/ios-voice-processor)
-[![Platform](https://img.shields.io/cocoapods/p/ios-voice-processor.svg?style=flat)](https://cocoapods.org/pods/ios-voice-processor)
+A Cocoa Pod library for real-time voice processing.
 
-## Example
+## Usage
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+### Initialize:
 
-## Requirements
-
-## Installation
-
-ios-voice-processor is available through [CocoaPods](https://cocoapods.org). To install
-it, simply add the following line to your Podfile:
-
-```ruby
-pod 'ios-voice-processor'
+```swift
+let voiceProcessor: VoiceProcessor = VoiceProcessor()
 ```
 
-## Author
+### Create callback:
 
-ksyeo1010, kyeo@picovoice.ai
+```swift
+func audioCallback(length: UInt32, pcm: UnsafePointer<Int16>) -> Void {
+    if length == 512 {
+        print("Recevied pcm with length: ", length)
+    }
+}
+```
 
-## License
+### Start Audio:
 
-ios-voice-processor is available under the MIT license. See the LICENSE file for more info.
+```swift
+do {
+    if try !voiceProcessor.hasPermissions() {
+        print("Permissions denied.")
+        return
+    }
+
+    try voiceProcessor.start(
+        frameLength: 512, 
+        sampleRate: 16000, 
+        audioCallback: self.audioCallback)
+} catch {
+    print("Could not start voice processor.")
+    return
+}
+```
+
+### Stop Audio:
+
+```swift
+voiceProcessor.stop()
+```

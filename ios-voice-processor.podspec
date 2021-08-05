@@ -1,42 +1,30 @@
 #
-# Be sure to run `pod lib lint ios-voice-processor.podspec' to ensure this is a
-# valid spec before submitting.
-#
-# Any lines starting with a # are optional, but their use is encouraged
-# To learn more about a Podspec see https://guides.cocoapods.org/syntax/podspec.html
+# Copyright 2021 Picovoice Inc.
+# You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
+# file accompanying this source.
+# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+# an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+# specific language governing permissions and limitations under the License.
 #
 
 Pod::Spec.new do |s|
   s.name             = 'ios-voice-processor'
-  s.version          = '0.1.0'
-  s.summary          = 'A short description of ios-voice-processor.'
-
-# This description is used to generate tags and improve search results.
-#   * Think: What does it do? Why did you write it? What is the focus?
-#   * Try to keep it short, snappy and to the point.
-#   * Write the description between the DESC delimiters below.
-#   * Finally, don't worry about the indent, CocoaPods strips it!
-
+  s.version          = '1.0.0'
+  s.summary          = 'A cocoapod library for real-time voice processing.'
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+A voice processing library for ios. Has basic functionality to check record permissions, start recording, stop recording and processor
+frames while recording.
                        DESC
 
-  s.homepage         = 'https://github.com/ksyeo1010/ios-voice-processor'
-  # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
-  s.license          = { :type => 'MIT', :file => 'LICENSE' }
+  s.homepage         = 'https://github.com/Picovoice/ios-voice-processor'
+  s.license          = { :type => 'Apache', :file => 'LICENSE' }
   s.author           = { 'ksyeo1010' => 'kyeo@picovoice.ai' }
-  s.source           = { :git => 'https://github.com/ksyeo1010/ios-voice-processor.git', :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
+  s.source           = { :git => 'https://github.com/Picovoice/ios-voice-processor.git', :tag => s.version.to_s }
+  s.social_media_url = 'https://picovoice.ai/'
 
   s.ios.deployment_target = '9.0'
 
-  s.source_files = 'ios-voice-processor/Classes/**/*'
-  
-  # s.resource_bundles = {
-  #   'ios-voice-processor' => ['ios-voice-processor/Assets/*.png']
-  # }
+  s.source_files = 'VoiceProcessor.swift'
 
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
+  s.frameworks = 'AVFoundation'
 end
