@@ -4,19 +4,11 @@ A Cocoa Pod library for real-time voice processing.
 
 ## Usage
 
-### Initialize:
-
-```swift
-let voiceProcessor: VoiceProcessor = VoiceProcessor()
-```
-
 ### Create callback:
 
 ```swift
-func audioCallback(length: UInt32, pcm: UnsafePointer<Int16>) -> Void {
-    if length == 512 {
-        print("Recevied pcm with length: ", length)
-    }
+func audioCallback(pcm: UnsafePointer<Int16>) -> Void {
+    print("Recevied pcm.")
 }
 ```
 
@@ -24,12 +16,12 @@ func audioCallback(length: UInt32, pcm: UnsafePointer<Int16>) -> Void {
 
 ```swift
 do {
-    if try !voiceProcessor.hasPermissions() {
+    guard try VoiceProcessor.shared.hasPermissions() else {
         print("Permissions denied.")
         return
     }
 
-    try voiceProcessor.start(
+    try VoiceProcessor.shared.start(
         frameLength: 512, 
         sampleRate: 16000, 
         audioCallback: self.audioCallback)
@@ -42,7 +34,7 @@ do {
 ### Stop Audio:
 
 ```swift
-voiceProcessor.stop()
+VoiceProcessor.shared.stop()
 ```
 
 ## Example

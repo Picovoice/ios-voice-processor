@@ -10,11 +10,16 @@
 import AVFoundation
 
 public class VoiceProcessor {
+    public static let shared: VoiceProcessor = VoiceProcessor()
+    
     private let numBuffers = 3
     private var audioQueue: AudioQueueRef?
-    private var audioCallback: ((UInt32, UnsafePointer<Int16>) -> Void)?
+    private var audioCallback: ((UnsafePointer<Int16>) -> Void)?
+    private var frameLength: UInt32?
     
-    public init() {}
+    private var started = false
+    
+    private init() {}
     
     public func hasPermissions() throws -> Bool {
         let audioSession = AVAudioSession.sharedInstance()
@@ -30,7 +35,7 @@ public class VoiceProcessor {
     public func start(
         frameLength: UInt32,
         sampleRate: UInt32,
-        audioCallback: @escaping ((UInt32, UnsafePointer<Int16>) -> Void),
+        audioCallback: @escaping ((UnsafePointer<Int16>) -> Void),
         formatID: AudioFormatID = kAudioFormatLinearPCM,
         formatFlags: AudioFormatFlags = kLinearPCMFormatFlagIsSignedInteger | kLinearPCMFormatFlagIsPacked,
         bytesPerPacket: UInt32 = 2,
@@ -40,6 +45,10 @@ public class VoiceProcessor {
         bitsPerChannel: UInt32 = 16,
         reserved: UInt32 = 0
     ) throws {
+        if started {
+            return
+        }
+        
         var format = AudioStreamBasicDescription(
             mSampleRate: Float64(sampleRate),
             mFormatID: formatID,
@@ -50,6 +59,9 @@ public class VoiceProcessor {
             mChannelsPerFrame: channelsPerFrame,
             mBitsPerChannel: bitsPerChannel,
             mReserved: reserved)
+        
+        self.frameLength = frameLength;
+        
         let userData = UnsafeMutableRawPointer(Unmanaged.passUnretained(self).toOpaque())
         AudioQueueNewInput(&format, createAudioQueueCallback(), userData, nil, nil, 0, &audioQueue)
         
@@ -69,9 +81,13 @@ public class VoiceProcessor {
         }
         
         AudioQueueStart(queue, nil)
+        started = true
     }
     
     public func stop() {
+        if !started {
+            return
+        }
         guard let audioQueue = audioQueue else {
             return
         }
@@ -79,6 +95,7 @@ public class VoiceProcessor {
         AudioQueueStop(audioQueue, true)
         AudioQueueDispose(audioQueue, true)
         audioCallback = nil
+        started = false
     }
     
     private func createAudioQueueCallback() -> AudioQueueInputCallback {
@@ -90,10 +107,18 @@ public class VoiceProcessor {
             }
             let `self` = Unmanaged<VoiceProcessor>.fromOpaque(userData).takeUnretainedValue()
             
+            guard let frameLength = self.frameLength else {
+                return
+            }
+            
+            guard frameLength == numPackets else {
+                return
+            }
+            
             let pcm = bufferRef.pointee.mAudioData.assumingMemoryBound(to: Int16.self)
             
             if let audioCallback = self.audioCallback {
-                audioCallback(numPackets, pcm)
+                audioCallback(pcm)
             }
             
             AudioQueueEnqueueBuffer(queue, bufferRef, 0, nil)

@@ -13,7 +13,6 @@ import ios_voice_processor
 class ViewController: UIViewController {
     @IBOutlet weak var startButton: UIButton!
     
-    let voiceProcessor: VoiceProcessor = VoiceProcessor()
     var isRecording: Bool = false
 
     override func viewDidLoad() {
@@ -39,12 +38,12 @@ class ViewController: UIViewController {
         if !isRecording {
             
             do {
-                if try !voiceProcessor.hasPermissions() {
+                guard try VoiceProcessor.shared.hasPermissions() else {
                     print("Permissions denied.")
                     return
                 }
                 
-                try voiceProcessor.start(frameLength: 512, sampleRate: 16000, audioCallback: self.audioCallback)
+                try VoiceProcessor.shared.start(frameLength: 512, sampleRate: 16000, audioCallback: self.audioCallback)
             } catch {
                 let alert = UIAlertController(
                         title: "Alert",
@@ -58,16 +57,15 @@ class ViewController: UIViewController {
             isRecording = true
             startButton.setTitle("STOP", for: UIControlState.normal)
         } else {
-            voiceProcessor.stop()
+            VoiceProcessor.shared.stop()
             isRecording = false
             startButton.setTitle("START", for: UIControlState.normal)
         }
     }
     
-    private func audioCallback(length: UInt32, pcm: UnsafePointer<Int16>) -> Void {
-        if length == 512 {
-            print("Recevied pcm with length: ", length)
-        }
+    private func audioCallback(pcm: UnsafePointer<Int16>) -> Void {
+        // do something with pcm
+        print("Recevied pcm.")
     }
 
 }
