@@ -100,11 +100,11 @@ public class VoiceProcessor {
     
     private func createAudioQueueCallback() -> AudioQueueInputCallback {
         return { userData, queue, bufferRef, startTimeRef, numPackets, packetDescriptions in
-            
             // `self` is passed in as userData in the audio queue callback.
             guard let userData = userData else {
                 return
             }
+            
             let `self` = Unmanaged<VoiceProcessor>.fromOpaque(userData).takeUnretainedValue()
             
             guard let frameLength = self.frameLength else {
