@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'ios-voice-processor'
-  s.version          = '1.0.1'
+  s.version          = '1.0.2'
   s.summary          = 'A cocoapod library for real-time voice processing.'
   s.description      = <<-DESC
 A voice processing library for ios. Has basic functionality to check record permissions, start recording, stop recording and processor
