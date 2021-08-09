@@ -63,9 +63,9 @@ class ViewController: UIViewController {
         }
     }
     
-    private func audioCallback(pcm: UnsafePointer<Int16>) -> Void {
+    private func audioCallback(pcm: [Int16]) -> Void {
         // do something with pcm
-        print("Recevied pcm.")
+        print("Recevied pcm with length: ", pcm.count)
     }
 
 }

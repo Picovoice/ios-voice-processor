@@ -14,7 +14,7 @@ public class VoiceProcessor {
     
     private let numBuffers = 3
     private var audioQueue: AudioQueueRef?
-    private var audioCallback: ((UnsafePointer<Int16>) -> Void)?
+    private var audioCallback: (([Int16]) -> Void)?
     private var frameLength: UInt32?
     
     private var started = false
@@ -35,7 +35,7 @@ public class VoiceProcessor {
     public func start(
         frameLength: UInt32,
         sampleRate: UInt32,
-        audioCallback: @escaping ((UnsafePointer<Int16>) -> Void),
+        audioCallback: @escaping (([Int16]) -> Void),
         formatID: AudioFormatID = kAudioFormatLinearPCM,
         formatFlags: AudioFormatFlags = kLinearPCMFormatFlagIsSignedInteger | kLinearPCMFormatFlagIsPacked,
         bytesPerPacket: UInt32 = 2,
@@ -102,6 +102,7 @@ public class VoiceProcessor {
         return { userData, queue, bufferRef, startTimeRef, numPackets, packetDescriptions in
             // `self` is passed in as userData in the audio queue callback.
             guard let userData = userData else {
+                
                 return
             }
             
@@ -115,7 +116,8 @@ public class VoiceProcessor {
                 return
             }
             
-            let pcm = bufferRef.pointee.mAudioData.assumingMemoryBound(to: Int16.self)
+            let ptr = bufferRef.pointee.mAudioData.assumingMemoryBound(to: Int16.self)
+            let pcm = Array(UnsafeBufferPointer(start: ptr, count: Int(frameLength)))
             
             if let audioCallback = self.audioCallback {
                 audioCallback(pcm)

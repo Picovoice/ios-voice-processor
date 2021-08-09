@@ -7,8 +7,9 @@ A Cocoa Pod library for real-time voice processing.
 ### Create callback:
 
 ```swift
-func audioCallback(pcm: UnsafePointer<Int16>) -> Void {
-    print("Recevied pcm.")
+func audioCallback(pcm: [Int16]) -> Void {
+    // do something with pcm
+    print("Recevied pcm with length: ", pcm.count)
 }
 ```
 
