@@ -112,15 +112,13 @@ public class VoiceProcessor {
                 return
             }
             
-            guard frameLength == numPackets else {
-                return
-            }
-            
-            let ptr = bufferRef.pointee.mAudioData.assumingMemoryBound(to: Int16.self)
-            let pcm = Array(UnsafeBufferPointer(start: ptr, count: Int(frameLength)))
-            
-            if let audioCallback = self.audioCallback {
-                audioCallback(pcm)
+            if frameLength == numPackets {
+                let ptr = bufferRef.pointee.mAudioData.assumingMemoryBound(to: Int16.self)
+                let pcm = Array(UnsafeBufferPointer(start: ptr, count: Int(frameLength)))
+                
+                if let audioCallback = self.audioCallback {
+                    audioCallback(pcm)
+                }
             }
             
             AudioQueueEnqueueBuffer(queue, bufferRef, 0, nil)
