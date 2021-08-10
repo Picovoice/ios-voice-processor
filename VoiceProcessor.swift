@@ -15,19 +15,27 @@ public class VoiceProcessor {
     private let numBuffers = 3
     private var audioQueue: AudioQueueRef?
     private var audioCallback: (([Int16]) -> Void)?
+    private var sessionErrorCallback: ((Error) -> Void)?
     private var frameLength: UInt32?
+    private var bufferRef: AudioQueueBufferRef?
     
     private var started = false
+    private let session: AVAudioSession
     
-    private init() {}
+    private init() {
+        self.session = AVAudioSession.sharedInstance()
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleInterruption),
+            name: AVAudioSession.interruptionNotification,
+            object: self.session)
+    }
     
     public func hasPermissions() throws -> Bool {
-        let audioSession = AVAudioSession.sharedInstance()
-        if audioSession.recordPermission == .denied {
+        if self.session.recordPermission == .denied {
             return false
         }
-        
-        try audioSession.setCategory(AVAudioSession.Category.playAndRecord, options: [.mixWithOthers, .defaultToSpeaker, .allowBluetooth])
         
         return true
     }
@@ -43,9 +51,22 @@ public class VoiceProcessor {
         bytesPerFrame: UInt32 =  2,
         channelsPerFrame: UInt32 = 1,
         bitsPerChannel: UInt32 = 16,
-        reserved: UInt32 = 0
+        reserved: UInt32 = 0,
+        sessionErrorCallback: ((Error) -> Void)? = nil
     ) throws {
         if started {
+            return
+        }
+        
+        do {
+            try self.session.setCategory(AVAudioSession.Category.playAndRecord, options: [.mixWithOthers, .defaultToSpeaker, .allowBluetooth])
+            try self.session.setActive(true, options: .notifyOthersOnDeactivation)
+        } catch {
+            if self.sessionErrorCallback != nil {
+                sessionErrorCallback!(error)
+            } else {
+                print("\(error)")
+            }
             return
         }
         
@@ -60,8 +81,6 @@ public class VoiceProcessor {
             mBitsPerChannel: bitsPerChannel,
             mReserved: reserved)
         
-        self.frameLength = frameLength;
-        
         let userData = UnsafeMutableRawPointer(Unmanaged.passUnretained(self).toOpaque())
         AudioQueueNewInput(&format, createAudioQueueCallback(), userData, nil, nil, 0, &audioQueue)
         
@@ -69,23 +88,24 @@ public class VoiceProcessor {
             return
         }
         
+        self.frameLength = frameLength;
         self.audioCallback = audioCallback
-        
+        self.sessionErrorCallback = sessionErrorCallback
+
         let bufferSize = frameLength * 2
         for _ in 0..<numBuffers {
-            var bufferRef: AudioQueueBufferRef? = nil
-            AudioQueueAllocateBuffer(queue, bufferSize, &bufferRef)
+            AudioQueueAllocateBuffer(queue, bufferSize, &self.bufferRef)
             if let buffer = bufferRef {
                 AudioQueueEnqueueBuffer(queue, buffer, 0, nil)
             }
         }
-        
+
         AudioQueueStart(queue, nil)
         started = true
     }
     
     public func stop() {
-        if !started {
+        guard self.started else {
             return
         }
         guard let audioQueue = audioQueue else {
@@ -102,7 +122,6 @@ public class VoiceProcessor {
         return { userData, queue, bufferRef, startTimeRef, numPackets, packetDescriptions in
             // `self` is passed in as userData in the audio queue callback.
             guard let userData = userData else {
-                
                 return
             }
             
@@ -122,6 +141,36 @@ public class VoiceProcessor {
             }
             
             AudioQueueEnqueueBuffer(queue, bufferRef, 0, nil)
+        }
+    }
+    
+    @objc private func handleInterruption(_ notification: NSNotification) {
+        guard self.started else {
+            return
+        }
+        guard let audioQueue = audioQueue else {
+            return
+        }
+        
+        guard let info = notification.userInfo,
+        let typeValue = info[AVAudioSessionInterruptionTypeKey] as? UInt,
+        let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
+            return
+        }
+        
+        if type == .ended {
+            guard let optionsValue =
+                info[AVAudioSessionInterruptionOptionKey] as? UInt else {
+                    return
+            }
+            let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
+            if options.contains(.shouldResume) {
+                AudioQueueEnqueueBuffer(audioQueue, self.bufferRef!, 0, nil)
+                AudioQueueStart(audioQueue, nil)
+            }
+
+        } else if type == .began {
+            AudioQueueStop(audioQueue, true)
         }
     }
 }
