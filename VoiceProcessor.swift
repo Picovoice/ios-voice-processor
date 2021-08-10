@@ -15,25 +15,21 @@ public class VoiceProcessor {
     private let numBuffers = 3
     private var audioQueue: AudioQueueRef?
     private var audioCallback: (([Int16]) -> Void)?
-    private var sessionErrorCallback: ((Error) -> Void)?
     private var frameLength: UInt32?
     private var bufferRef: AudioQueueBufferRef?
     
     private var started = false
-    private let session: AVAudioSession
     
     private init() {
-        self.session = AVAudioSession.sharedInstance()
-        
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(handleInterruption),
             name: AVAudioSession.interruptionNotification,
-            object: self.session)
+            object: AVAudioSession.sharedInstance())
     }
     
     public func hasPermissions() throws -> Bool {
-        if self.session.recordPermission == .denied {
+        if AVAudioSession.sharedInstance().recordPermission == .denied {
             return false
         }
         
@@ -51,24 +47,14 @@ public class VoiceProcessor {
         bytesPerFrame: UInt32 =  2,
         channelsPerFrame: UInt32 = 1,
         bitsPerChannel: UInt32 = 16,
-        reserved: UInt32 = 0,
-        sessionErrorCallback: ((Error) -> Void)? = nil
+        reserved: UInt32 = 0
     ) throws {
         if started {
             return
         }
         
-        do {
-            try self.session.setCategory(AVAudioSession.Category.playAndRecord, options: [.mixWithOthers, .defaultToSpeaker, .allowBluetooth])
-            try self.session.setActive(true, options: .notifyOthersOnDeactivation)
-        } catch {
-            if self.sessionErrorCallback != nil {
-                sessionErrorCallback!(error)
-            } else {
-                print("\(error)")
-            }
-            return
-        }
+        try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playAndRecord, options: [.mixWithOthers, .defaultToSpeaker, .allowBluetooth])
+        try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
         
         var format = AudioStreamBasicDescription(
             mSampleRate: Float64(sampleRate),
@@ -90,7 +76,6 @@ public class VoiceProcessor {
         
         self.frameLength = frameLength;
         self.audioCallback = audioCallback
-        self.sessionErrorCallback = sessionErrorCallback
 
         let bufferSize = frameLength * 2
         for _ in 0..<numBuffers {
