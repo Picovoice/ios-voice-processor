@@ -49,7 +49,7 @@ public class VoiceProcessor {
     private var audioQueue: AudioQueueRef!
     private var bufferList = [AudioQueueBufferRef?](repeating: nil, count: 3)
     private var circularBuffer: VoiceProcessorBuffer?
-    
+
     private var frameListeners: [VoiceProcessorFrameListener] = []
     private var errorListeners: [VoiceProcessorErrorListener] = []
 
@@ -75,17 +75,20 @@ public class VoiceProcessor {
         errorListeners.count
     }
 
-    public var hasRecordAudioPermission: Bool {
-        AVAudioSession.sharedInstance().recordPermission == .granted
-    }
-
-    
     private init() {
         NotificationCenter.default.addObserver(
                 self,
                 selector: #selector(handleInterruption),
                 name: AVAudioSession.interruptionNotification,
                 object: AVAudioSession.sharedInstance())
+    }
+
+    public static var hasRecordAudioPermission: Bool {
+        AVAudioSession.sharedInstance().recordPermission == .granted
+    }
+
+    public static func requestRecordAudioPermission(_ response: @escaping (Bool) -> Void) {
+        AVAudioSession.sharedInstance().requestRecordPermission(response)
     }
 
     public func addFrameListener(_ listener: VoiceProcessorFrameListener) {
@@ -226,7 +229,7 @@ public class VoiceProcessor {
                 self.onError(VoiceProcessorRuntimeError("Unable to get audio frame: frame length is nil"))
                 return
             }
-            
+
             guard let circularBuffer = self.circularBuffer else {
                 self.onError(VoiceProcessorRuntimeError("Unable to get audio frame: circular buffer is nil"))
                 return
@@ -243,7 +246,7 @@ public class VoiceProcessor {
                 print("Unknown error encountered")
                 return
             }
-            
+
             if circularBuffer.availableSamples() >= frameLength {
                 let frame = circularBuffer.read(count: Int(frameLength))
                 if (frame.count != frameLength) {
