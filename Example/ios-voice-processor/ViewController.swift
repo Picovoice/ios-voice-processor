@@ -1,5 +1,5 @@
 //
-//  Copyright 2018-2021 Picovoice Inc.
+//  Copyright 2021-2023 Picovoice Inc.
 //  You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 //  file accompanying this source.
 //  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
@@ -27,6 +27,9 @@ class ViewController: UIViewController {
             CGPoint(x: (viewSize.width - startButtonSize.width) / 2, y: (viewSize.height - startButtonSize.height) / 2)
         startButton.layer.cornerRadius = 0.5 * startButton.bounds.size.width
         startButton.clipsToBounds = true
+
+        let frameListener = VoiceProcessorFrameListener(audioCallback)
+        VoiceProcessor.instance.addFrameListener(frameListener)
     }
 
     override func didReceiveMemoryWarning() {
@@ -38,12 +41,12 @@ class ViewController: UIViewController {
         if !isRecording {
             
             do {
-                guard try VoiceProcessor.shared.hasPermissions() else {
-                    print("Permissions denied.")
+                guard VoiceProcessor.instance.hasRecordAudioPermission else {
+                    print("Audio permission is required for audio recording.")
                     return
                 }
-                
-                try VoiceProcessor.shared.start(frameLength: 512, sampleRate: 16000, audioCallback: self.audioCallback)
+
+                try VoiceProcessor.instance.start(frameLength: 512, sampleRate: 16000)
             } catch {
                 let alert = UIAlertController(
                         title: "Alert",
@@ -55,11 +58,21 @@ class ViewController: UIViewController {
             }
             
             isRecording = true
-            startButton.setTitle("STOP", for: UIControlState.normal)
+            startButton.setTitle("STOP", for: UIControl.State.normal)
         } else {
-            VoiceProcessor.shared.stop()
+            do {
+                try VoiceProcessor.instance.stop()
+            } catch {
+                let alert = UIAlertController(
+                        title: "Alert",
+                        message: "Could not stop voice processor.",
+                        preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "Click", style: UIAlertAction.Style.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+                return
+            }
             isRecording = false
-            startButton.setTitle("START", for: UIControlState.normal)
+            startButton.setTitle("START", for: UIControl.State.normal)
         }
     }
     

@@ -1,5 +1,5 @@
 #
-# Copyright 2021 Picovoice Inc.
+# Copyright 2021-2023 Picovoice Inc.
 # You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 # file accompanying this source.
 # Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
@@ -9,21 +9,22 @@
 
 Pod::Spec.new do |s|
   s.name             = 'ios-voice-processor'
-  s.version          = '1.0.3'
-  s.summary          = 'A cocoapod library for real-time voice processing.'
+  s.module_name      = 'ios_voice_processor'
+  s.version          = '1.1.0'
+  s.summary          = 'An asynchronous iOS audio recording library designed for real-time speech audio processing.'
   s.description      = <<-DESC
-A voice processing library for ios. Has basic functionality to check record permissions, start recording, stop recording and processor
-frames while recording.
+  The iOS Voice Processor is an asynchronous audio capture library designed for real-time audio processing.
+  Given some specifications, the library delivers frames of raw audio data to the user via listeners.
                        DESC
 
   s.homepage         = 'https://github.com/Picovoice/ios-voice-processor'
-  s.license          = { :type => 'Apache', :file => 'LICENSE' }
-  s.author           = { 'ksyeo1010' => 'kyeo@picovoice.ai' }
+  s.license          = { :type => 'Apache 2.0' }
+  s.author           = { 'Picovoice' => 'hello@picovoice.ai' }
   s.source           = { :git => 'https://github.com/Picovoice/ios-voice-processor.git', :tag => s.version.to_s }
 
-  s.ios.deployment_target = '9.0'
+  s.ios.deployment_target = '11.0'
   s.swift_version = '5.0'
-  s.source_files = 'VoiceProcessor.swift'
+  s.source_files = 'VoiceProcessor*.swift'
   s.frameworks = 'AVFoundation'
-  
+
 end
