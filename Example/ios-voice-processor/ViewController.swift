@@ -14,13 +14,14 @@ import ios_voice_processor
 
 class ViewController: UIViewController {
     @IBOutlet weak var startButton: UIButton!
+    @IBOutlet weak var vuMeterView: VUMeterView!
 
+    private let FRAME_LENGTH: UInt32 = 512
+    private let SAMPLE_RATE: UInt32 = 16000
+    private let DUMP_AUDIO: Bool = false
+    
     private var isRecording: Bool = false
     private var recordedAudio: [Int16] = []
-
-    let FRAME_LENGTH: UInt32 = 512
-    let SAMPLE_RATE: UInt32 = 16000
-    let DUMP_AUDIO: Bool = true
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,10 +31,15 @@ class ViewController: UIViewController {
 
         startButton.frame.size = startButtonSize
         startButton.frame.origin =
-                CGPoint(x: (viewSize.width - startButtonSize.width) / 2, y: (viewSize.height - startButtonSize.height) / 2)
+                CGPoint(x: (viewSize.width - startButtonSize.width) / 2, y: (viewSize.height - startButtonSize.height - 40))
         startButton.layer.cornerRadius = 0.5 * startButton.bounds.size.width
         startButton.clipsToBounds = true
 
+        let vuMeterSize = CGSize(width: view.frame.width - 20, height: 80)
+        vuMeterView.frame.size = vuMeterSize
+        vuMeterView.frame.origin = CGPoint(x: (viewSize.width - vuMeterSize.width) / 2, y: (viewSize.height - vuMeterSize.height) / 2)
+        vuMeterView.clipsToBounds = true
+        
         let frameListener = VoiceProcessorFrameListener(audioCallback)
         VoiceProcessor.instance.addFrameListener(frameListener)
     }
@@ -118,6 +124,15 @@ class ViewController: UIViewController {
     private func audioCallback(frame: [Int16]) -> Void {
         if DUMP_AUDIO {
             recordedAudio.append(contentsOf: frame)
+        }
+
+        let sum = frame.reduce(0) { $0 + (Double($1) * Double($1)) }
+        let rms = sqrt(sum / Double(frame.count))
+        
+        let dbfs = 20 * log10(rms / Double(INT16_MAX))
+        
+        DispatchQueue.main.async {
+            self.vuMeterView.addVolumeValue(dbfsValue: dbfs)
         }
     }
 

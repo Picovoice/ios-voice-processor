@@ -16,6 +16,7 @@
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		66A25692DB18E8BE74444FD0 /* Pods_ios_voice_processor_ExampleUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0C433ACC5D32169CB6CAE92 /* Pods_ios_voice_processor_ExampleUITests.framework */; };
+		A52A7DC2A02D4BD6D381CF8C /* VUMeterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52A712372EAD5F53885CD53 /* VUMeterView.swift */; };
 		F9E82547CB5426845C7CC97E /* Pods_ios_voice_processor_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0247FE9E2A70689500D368BE /* Pods_ios_voice_processor_Example.framework */; };
 /* End PBXBuildFile section */
 
@@ -64,6 +65,7 @@
 		607FACDC1AFB9204008FA782 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		8B9B48BADD35114B8CAEA581 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		9AB8D9298C33D6D267509D99 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		A52A712372EAD5F53885CD53 /* VUMeterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VUMeterView.swift; sourceTree = "<group>"; };
 		B93F49F857B5BE6CDF82B6D9 /* Pods-ios-voice-processor_ExampleUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ios-voice-processor_ExampleUITests.debug.xcconfig"; path = "Target Support Files/Pods-ios-voice-processor_ExampleUITests/Pods-ios-voice-processor_ExampleUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		C0C433ACC5D32169CB6CAE92 /* Pods_ios_voice_processor_ExampleUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ios_voice_processor_ExampleUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1EFD1FF4DA5E077FC1E9E1E /* Pods-ios-voice-processor_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ios-voice-processor_Example.release.xcconfig"; path = "Target Support Files/Pods-ios-voice-processor_Example/Pods-ios-voice-processor_Example.release.xcconfig"; sourceTree = "<group>"; };
@@ -144,6 +146,7 @@
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
+				A52A712372EAD5F53885CD53 /* VUMeterView.swift */,
 			);
 			name = "Example for ios-voice-processor";
 			path = "ios-voice-processor";
@@ -382,6 +385,7 @@
 			files = (
 				1ED03A0226BC5B9B0078E0E7 /* ViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				A52A7DC2A02D4BD6D381CF8C /* VUMeterView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
