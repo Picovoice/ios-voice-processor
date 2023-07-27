@@ -24,7 +24,7 @@ defaults:
 jobs:
   build:
     name: Run iOS Tests
-    runs-on: mac-latest
+    runs-on: macos-latest
 
     steps:
       - name: Checkout
