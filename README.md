@@ -54,7 +54,7 @@ To enable recording with your iOS device's microphone you must add the following
 <string>[Permission explanation]</string>
 ```
 
-See our [example app](example/) or [this guide](https://developer.apple.com/documentation/avfaudio/avaudiosession/1616601-requestrecordpermission) for how to properly request this permission from your users.
+See our [example app](./example) or [this guide](https://developer.apple.com/documentation/avfaudio/avaudiosession/1616601-requestrecordpermission) for how to properly request this permission from your users.
 
 ## Usage
 
@@ -96,7 +96,7 @@ Stop audio capture:
 do {
     try voiceProcessor.stop(frameLength: 512, sampleRate: 16000);
 } catch {
-
+}
 ```
 
 Once audio capture has started successfully, any frame listeners assigned to the `VoiceProcessor`
@@ -121,7 +121,7 @@ voiceProcessor.clearFrameListeners();
 
 ## Example
 
-The [iOS Voice Processor app](example/) demonstrates how to ask for user permissions and capture output from the `VoiceProcessor`.
+The [iOS Voice Processor app](./example) demonstrates how to ask for user permissions and capture output from the `VoiceProcessor`.
 
 ## Releases
 

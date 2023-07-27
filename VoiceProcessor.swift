@@ -160,7 +160,7 @@ public class VoiceProcessor {
         lock.unlock()
     }
 
-    /// Clears all currently registed frame listeners.
+    /// Clears all currently registered frame listeners.
     public func clearFrameListeners() {
         lock.lock()
         frameListeners.removeAll()
@@ -211,7 +211,7 @@ public class VoiceProcessor {
 
         circularBuffer = VoiceProcessorBuffer(size: Int(frameLength * 10))
         if isRecording_ {
-            if (frameLength != frameLength_ || sampleRate != sampleRate_) {
+            if frameLength != frameLength_ || sampleRate != sampleRate_ {
                 throw VoiceProcessorArgumentError("""
                                                   VoiceProcessor start() was called with frame length
                                                   \(frameLength) and sample rate \(sampleRate) while already recording
@@ -292,7 +292,9 @@ public class VoiceProcessor {
                 return
             }
 
-            let bufferPtr = bufferRef.pointee.mAudioData.bindMemory(to: Int16.self, capacity: Int(bufferRef.pointee.mAudioDataByteSize) / MemoryLayout<Int16>.size)
+            let bufferPtr = bufferRef.pointee.mAudioData.bindMemory(
+                    to: Int16.self,
+                    capacity: Int(bufferRef.pointee.mAudioDataByteSize) / MemoryLayout<Int16>.size)
             let samples = Array(UnsafeBufferPointer(start: bufferPtr, count: Int(numPackets)))
 
             do {
@@ -306,8 +308,14 @@ public class VoiceProcessor {
 
             if circularBuffer.availableSamples() >= frameLength {
                 let frame = circularBuffer.read(count: Int(frameLength))
-                if (frame.count != frameLength) {
-                    self.onError(VoiceProcessorReadError("Circular buffer returned a frame of size \(frame.count) (frameLength is \(frameLength))"))
+                if frame.count != frameLength {
+                    self.onError(
+                            VoiceProcessorReadError(
+                                    """
+                                    Circular buffer returned a frame of 
+                                    size \(frame.count) (frameLength is \(frameLength))
+                                    """
+                            ))
                 }
                 self.onFrame(frame)
             }
