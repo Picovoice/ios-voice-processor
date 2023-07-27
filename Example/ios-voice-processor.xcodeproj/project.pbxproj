@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		0247FE7E2A7062B500D368BE /* VoiceProcessorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0247FE7D2A7062B500D368BE /* VoiceProcessorTests.swift */; };
 		0247FE8A2A70660A00D368BE /* Pods_ios_voice_processor_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31BD2D0D93155E8AFCFC8373 /* Pods_ios_voice_processor_Example.framework */; };
-		0247FE8B2A70660A00D368BE /* Pods_ios_voice_processor_Example.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 31BD2D0D93155E8AFCFC8373 /* Pods_ios_voice_processor_Example.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0247FEA72A70962B00D368BE /* VoiceProcessorBufferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0247FEA62A70962B00D368BE /* VoiceProcessorBufferTests.swift */; };
 		1E0EC0D026BC5B3100A5C080 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1E0EC0CD26BC59C800A5C080 /* Main.storyboard */; };
 		1ED03A0226BC5B9B0078E0E7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
@@ -29,20 +28,6 @@
 			remoteInfo = "ios-voice-processor_Example";
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		0247FE8C2A70660A00D368BE /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				0247FE8B2A70660A00D368BE /* Pods_ios_voice_processor_Example.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0247FE7B2A7062B500D368BE /* ios-voice-processor_ExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ios-voice-processor_ExampleUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -213,7 +198,6 @@
 				607FACCD1AFB9204008FA782 /* Frameworks */,
 				607FACCE1AFB9204008FA782 /* Resources */,
 				74B1AD03E059B510840AC16D /* [CP] Embed Pods Frameworks */,
-				0247FE8C2A70660A00D368BE /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -501,9 +485,11 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 65723695GD;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -524,6 +510,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CODE_SIGN_FLAGS = "";
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -555,9 +542,11 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 65723695GD;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -570,6 +559,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CODE_SIGN_FLAGS = "";
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 5.0;
@@ -587,7 +577,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = ai.picovoice;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.picovoice.voiceprocessorexample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 5.0;
@@ -604,7 +594,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = ai.picovoice;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.picovoice.voiceprocessorexample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 5.0;

@@ -142,7 +142,6 @@ class ViewController: UIViewController {
                 in: .userDomainMask,
                 appropriateFor: nil,
                 create: false)
-        print(outputDir)
         let fileUrl = outputDir.appendingPathComponent(audioFileName)
 
         if FileManager.default.fileExists(atPath: fileUrl.path) {

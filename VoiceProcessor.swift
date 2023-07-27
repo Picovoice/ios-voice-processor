@@ -353,7 +353,9 @@ public class VoiceProcessor {
     private func onFrame(_ frame: [Int16]) {
         lock.lock()
         for listener in frameListeners {
-            listener.onFrame(frame)
+            DispatchQueue.main.async {
+                listener.onFrame(frame)
+            }
         }
         lock.unlock()
     }
@@ -361,7 +363,9 @@ public class VoiceProcessor {
     private func onError(_ error: VoiceProcessorError) {
         lock.lock()
         for listener in errorListeners {
-            listener.onError(error)
+            DispatchQueue.main.async {
+                listener.onError(error)
+            }
         }
         lock.unlock()
     }
