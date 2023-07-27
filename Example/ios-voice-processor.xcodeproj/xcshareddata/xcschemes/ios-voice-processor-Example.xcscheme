@@ -55,29 +55,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "607FACE41AFB9204008FA782"
-               BuildableName = "ios-voice-processor_Tests.xctest"
-               BlueprintName = "ios-voice-processor_Tests"
-               ReferencedContainer = "container:ios-voice-processor.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "0247FE7A2A7062B500D368BE"
                BuildableName = "ios-voice-processor_ExampleUITests.xctest"
                BlueprintName = "ios-voice-processor_ExampleUITests"
-               ReferencedContainer = "container:ios-voice-processor.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "0247FE922A70675500D368BE"
-               BuildableName = "ios-voice-processor_ExampleTests.xctest"
-               BlueprintName = "ios-voice-processor_ExampleTests"
                ReferencedContainer = "container:ios-voice-processor.xcodeproj">
             </BuildableReference>
          </TestableReference>

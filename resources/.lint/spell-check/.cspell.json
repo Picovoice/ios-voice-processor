@@ -1,0 +1,32 @@
+{
+  "language": "en",
+  "dictionaries": [
+    "dict"
+  ],
+  "dictionaryDefinitions": [
+    {
+      "name": "dict",
+      "path": "./dict.txt",
+      "addWords": true
+    }
+  ],
+  "ignorePaths": [
+    // binaries
+    "**/*.a",
+    "**/*.dll",
+    "**/*.dylib",
+    "**/*.so",
+    "**/*.wav",
+
+    // ios
+    "**/*.xcconfig",
+    "**/*.podspec",
+    "**/Podfile",
+    "**/*.plist",
+    "**/contents.xcworkspacedata",
+    "**/*.storyboard",
+    "**/*.pbxproj",
+    "**/*.xcscheme",
+    "**/*.m"
+  ]
+}

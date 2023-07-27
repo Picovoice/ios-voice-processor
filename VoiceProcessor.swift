@@ -44,7 +44,7 @@ public class VoiceProcessorErrorListener {
     public init(_ callback: @escaping VoiceProcessorErrorCallback) {
         callback_ = callback
     }
-    
+
     /// Function called when a `VoiceProcessorError` occurs.
     public var onError: VoiceProcessorErrorCallback {
         get {
@@ -53,9 +53,10 @@ public class VoiceProcessorErrorListener {
     }
 }
 
-///
+/// The iOS Voice Processor is an asynchronous audio capture library designed for real-time audio processing.
+/// Given some specifications, the library delivers frames of raw audio data to the user via listeners.
 public class VoiceProcessor {
-    
+
     /// The singleton instance of `VoiceProcessor`.
     public static let instance: VoiceProcessor = VoiceProcessor()
 
@@ -71,7 +72,7 @@ public class VoiceProcessor {
     private var isRecording_: Bool = false
     private var frameLength_: UInt32? = nil
     private var sampleRate_: UInt32? = nil
-    
+
     /// A boolean value indicating if the `VoiceProcessor` is currently recording audio.
     public var isRecording: Bool {
         isRecording_
@@ -91,7 +92,7 @@ public class VoiceProcessor {
     public var numFrameListeners: Int {
         frameListeners.count
     }
-    
+
     /// The number of registered `VoiceProcessorErrorListeners`.
     public var numErrorListeners: Int {
         errorListeners.count
@@ -232,6 +233,7 @@ public class VoiceProcessor {
                     true,
                     options: .notifyOthersOnDeactivation)
         } catch {
+            print(error)
             throw VoiceProcessorRuntimeError("Unable to capture audio session.")
         }
 
@@ -353,7 +355,7 @@ public class VoiceProcessor {
     private func onFrame(_ frame: [Int16]) {
         lock.lock()
         for listener in frameListeners {
-            DispatchQueue.main.async {
+            DispatchQueue.global().async {
                 listener.onFrame(frame)
             }
         }
@@ -363,7 +365,7 @@ public class VoiceProcessor {
     private func onError(_ error: VoiceProcessorError) {
         lock.lock()
         for listener in errorListeners {
-            DispatchQueue.main.async {
+            DispatchQueue.global().async {
                 listener.onError(error)
             }
         }

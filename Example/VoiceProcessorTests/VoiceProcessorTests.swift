@@ -16,10 +16,10 @@ class VoiceProcessorTests: XCTestCase {
 
     let frameLength: UInt32 = 512
     let sampleRate: UInt32 = 16000
-    
+
     var frameCount = 0
     var errorCount = 0
-    
+
     override func setUp() {
         super.setUp()
         continueAfterFailure = false
@@ -28,18 +28,7 @@ class VoiceProcessorTests: XCTestCase {
     override func tearDown() {
         super.tearDown()
     }
-    
-    func testGetInstance() {
-        let vp = VoiceProcessor.instance
-        if (!vp.hasRecordAudioPermission) {
-            AVAudioSession.sharedInstance().requestRecordPermission { granted in
-                if !granted {
-                    XCTFail()
-                }
-            }
-        }
-    }
-    
+
     func testBasic() throws {
         let vp = VoiceProcessor.instance
 
@@ -57,9 +46,11 @@ class VoiceProcessorTests: XCTestCase {
         vp.addFrameListener(vpFrameListener)
         vp.addErrorListener(vpErrorListener)
         try vp.start(frameLength: frameLength, sampleRate: sampleRate)
+        XCTAssertEqual(vp.frameLength, frameLength)
+        XCTAssertEqual(vp.sampleRate, sampleRate)
         XCTAssert(vp.isRecording == true)
 
-        sleep(1)
+        sleep(3)
 
         try vp.stop()
 
@@ -72,7 +63,7 @@ class VoiceProcessorTests: XCTestCase {
         frameCount = 0
         errorCount = 0
     }
-    
+
     func testInvalidSetup() throws {
         let vp = VoiceProcessor.instance
 

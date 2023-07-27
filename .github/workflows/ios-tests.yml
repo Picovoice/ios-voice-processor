@@ -1,0 +1,46 @@
+name: iOS Tests
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/ios-tests.yml'
+      - "**"
+      - "!README.md"
+      - '!example/README.md'
+  pull_request:
+    branches: [ main, 'v[0-9]+.[0-9]+' ]
+    paths:
+      - '.github/workflows/ios-tests.yml'
+      - "**"
+      - "!README.md"
+      - '!example/README.md'
+
+defaults:
+  run:
+    working-directory: example
+
+jobs:
+  build:
+    name: Run iOS Tests
+    runs-on: mac-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Cocoapods
+        run: gem install cocoapods
+
+      - name: Run Cocoapods
+        run: pod install
+
+      - name: XCode Build
+        run: xcodebuild test
+          -configuration Debug
+          -workspace ios-voice-processor.xcworkspace
+          -sdk iphoneos
+          -scheme ios-voice-processor-Example
+          -destination "platform=iOS Simulator,name=iPhone 12"
+          CODE_SIGNING_ALLOWED=NO

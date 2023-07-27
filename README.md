@@ -23,8 +23,8 @@ do {
     }
 
     try VoiceProcessor.shared.start(
-        frameLength: 512, 
-        sampleRate: 16000, 
+        frameLength: 512,
+        sampleRate: 16000,
         audioCallback: self.audioCallback)
 } catch {
     print("Could not start voice processor.")
@@ -40,6 +40,6 @@ VoiceProcessor.shared.stop()
 
 ## Example
 
-To run the example, go to [Example](/Example).
+To run the example, go to [example](/example).
 
-Run `pod install` and then open the Example directory in xcode. Then run it in your device or simulator.
+Run `pod install` and then open the example directory in xcode. Then run it in your device or simulator.
