@@ -10,7 +10,7 @@
 import AVFoundation
 
 /// Typealias for the callback function that handles frames of audio data.
-public typealias VoiceProcessorFrameCallback = ([Int16]) -> ()
+public typealias VoiceProcessorFrameCallback = ([Int16]) -> Void
 
 /// Listener class for receiving audio frames from `VoiceProcessor` via the `onFrame` property.
 public class VoiceProcessorFrameListener {
@@ -25,14 +25,12 @@ public class VoiceProcessorFrameListener {
 
     /// Function called when a frame of audio is received.
     public var onFrame: VoiceProcessorFrameCallback {
-        get {
-            callback_
-        }
+        callback_
     }
 }
 
 /// Typealias for the callback function that handles errors that are emitted from `VoiceProcessor`.
-public typealias VoiceProcessorErrorCallback = (VoiceProcessorError) -> ()
+public typealias VoiceProcessorErrorCallback = (VoiceProcessorError) -> Void
 
 /// Listener class for receiving errors from `VoiceProcessor` via the `onError` property.
 public class VoiceProcessorErrorListener {
@@ -47,9 +45,7 @@ public class VoiceProcessorErrorListener {
 
     /// Function called when a `VoiceProcessorError` occurs.
     public var onError: VoiceProcessorErrorCallback {
-        get {
-            callback_
-        }
+        callback_
     }
 }
 
@@ -70,8 +66,8 @@ public class VoiceProcessor {
     private var errorListeners: [VoiceProcessorErrorListener] = []
 
     private var isRecording_: Bool = false
-    private var frameLength_: UInt32? = nil
-    private var sampleRate_: UInt32? = nil
+    private var frameLength_: UInt32?
+    private var sampleRate_: UInt32?
 
     /// A boolean value indicating if the `VoiceProcessor` is currently recording audio.
     public var isRecording: Bool {
@@ -167,7 +163,7 @@ public class VoiceProcessor {
         lock.unlock()
     }
 
-    // Adds an error listener.
+    /// Adds an error listener.
     ///
     /// - Parameter listener: The `VoiceProcessorErrorListener` to be added as an error listener.
     public func addErrorListener(_ listener: VoiceProcessorErrorListener) {
@@ -279,7 +275,7 @@ public class VoiceProcessor {
     }
 
     private func createAudioQueueCallback() -> AudioQueueInputCallback {
-        { userData, queue, bufferRef, startTimeRef, numPackets, packetDescriptions in
+        { userData, queue, bufferRef, _, numPackets, _ in
             let `self` = Unmanaged<VoiceProcessor>.fromOpaque(userData!).takeUnretainedValue()
 
             guard let frameLength = self.frameLength_ else {
@@ -312,7 +308,7 @@ public class VoiceProcessor {
                     self.onError(
                             VoiceProcessorReadError(
                                     """
-                                    Circular buffer returned a frame of 
+                                    Circular buffer returned a frame of
                                     size \(frame.count) (frameLength is \(frameLength))
                                     """
                             ))

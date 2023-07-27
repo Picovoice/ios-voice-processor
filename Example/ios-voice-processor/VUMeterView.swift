@@ -11,24 +11,24 @@ import UIKit
 
 class VUMeterView: UIView {
 
-    private let DBFS_OFFSET = 60.0
-    private let VOLUME_HISTORY_CAPACITY = 5
-    
+    private let dbfsOffset = 60.0
+    private let volumeHistoryCapacity = 5
+
     private var volumeHistory: [Double] = []
     private var volumeAverage: Double = 0
 
     public func addVolumeValue(dbfsValue: Double) {
-        
-        var adjustedValue = dbfsValue + DBFS_OFFSET
-        adjustedValue = (max(0.0, adjustedValue) / DBFS_OFFSET)
+
+        var adjustedValue = dbfsValue + dbfsOffset
+        adjustedValue = (max(0.0, adjustedValue) / dbfsOffset)
         adjustedValue = min(1.0, adjustedValue)
-        
-        if volumeHistory.count == VOLUME_HISTORY_CAPACITY {
+
+        if volumeHistory.count == volumeHistoryCapacity {
             volumeHistory.removeFirst()
         }
         volumeHistory.append(adjustedValue)
         volumeAverage = volumeHistory.reduce(0, +) / Double(volumeHistory.count)
-        
+
         setNeedsDisplay()
     }
 
@@ -39,7 +39,7 @@ class VUMeterView: UIView {
         let emptyRect = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height)
         context?.setFillColor(UIColor.gray.cgColor)
         context?.fill(emptyRect)
-        
+
         let meterRect = CGRect(x: 0, y: 0, width: bounds.width * CGFloat(volumeAverage), height: bounds.height)
         context?.setFillColor(UIColor(red: 0.216, green: 0.49, blue: 1, alpha: 1).cgColor)
         context?.fill(meterRect)

@@ -30,7 +30,7 @@ class VoiceProcessorTests: XCTestCase {
     }
 
     func testBasic() throws {
-        let vp = VoiceProcessor.instance
+        let voiceProcessor = VoiceProcessor.instance
 
         let vpFrameListener = VoiceProcessorFrameListener { frame in
             XCTAssert(frame.count == self.frameLength)
@@ -42,91 +42,91 @@ class VoiceProcessorTests: XCTestCase {
             self.errorCount += 1
         }
 
-        XCTAssert(vp.isRecording == false)
-        vp.addFrameListener(vpFrameListener)
-        vp.addErrorListener(vpErrorListener)
-        try vp.start(frameLength: frameLength, sampleRate: sampleRate)
-        XCTAssertEqual(vp.frameLength, frameLength)
-        XCTAssertEqual(vp.sampleRate, sampleRate)
-        XCTAssert(vp.isRecording == true)
+        XCTAssert(voiceProcessor.isRecording == false)
+        voiceProcessor.addFrameListener(vpFrameListener)
+        voiceProcessor.addErrorListener(vpErrorListener)
+        try voiceProcessor.start(frameLength: frameLength, sampleRate: sampleRate)
+        XCTAssertEqual(voiceProcessor.frameLength, frameLength)
+        XCTAssertEqual(voiceProcessor.sampleRate, sampleRate)
+        XCTAssert(voiceProcessor.isRecording == true)
 
         sleep(3)
 
-        try vp.stop()
+        try voiceProcessor.stop()
 
         XCTAssert(frameCount > 0)
         XCTAssert(errorCount == 0)
-        XCTAssert(vp.isRecording == false)
+        XCTAssert(voiceProcessor.isRecording == false)
 
-        vp.clearErrorListeners()
-        vp.clearFrameListeners()
+        voiceProcessor.clearErrorListeners()
+        voiceProcessor.clearFrameListeners()
         frameCount = 0
         errorCount = 0
     }
 
     func testInvalidSetup() throws {
-        let vp = VoiceProcessor.instance
+        let voiceProcessor = VoiceProcessor.instance
 
-        XCTAssertThrowsError(try vp.start(frameLength: 0, sampleRate: 16000)) { error in
+        XCTAssertThrowsError(try voiceProcessor.start(frameLength: 0, sampleRate: 16000)) { error in
             XCTAssert(error is VoiceProcessorArgumentError)
         }
 
-        XCTAssertThrowsError(try vp.start(frameLength: 512, sampleRate: 0)) { error in
+        XCTAssertThrowsError(try voiceProcessor.start(frameLength: 512, sampleRate: 0)) { error in
             XCTAssert(error is VoiceProcessorArgumentError)
         }
 
-        try vp.start(frameLength: frameLength, sampleRate: sampleRate)
+        try voiceProcessor.start(frameLength: frameLength, sampleRate: sampleRate)
 
-        XCTAssertThrowsError(try vp.start(frameLength: 1024, sampleRate: 44100)) { error in
+        XCTAssertThrowsError(try voiceProcessor.start(frameLength: 1024, sampleRate: 44100)) { error in
             XCTAssert(error is VoiceProcessorArgumentError)
         }
 
-        try vp.stop()
+        try voiceProcessor.stop()
     }
 
     func testAddRemoveListeners() {
-        let vp = VoiceProcessor.instance
+        let voiceProcessor = VoiceProcessor.instance
 
-        let f1 = VoiceProcessorFrameListener({_ in })
-        let f2 = VoiceProcessorFrameListener({_ in })
+        let frameListener1 = VoiceProcessorFrameListener({ _ in })
+        let frameListener2 = VoiceProcessorFrameListener({ _ in })
 
-        let e1 = VoiceProcessorErrorListener({_ in })
-        let e2 = VoiceProcessorErrorListener({_ in })
+        let errorListener1 = VoiceProcessorErrorListener({ _ in })
+        let errorListener2 = VoiceProcessorErrorListener({ _ in })
 
-        vp.addFrameListener(f1);
-        XCTAssertEqual(vp.numFrameListeners, 1);
-        vp.addFrameListener(f2);
-        XCTAssertEqual(vp.numFrameListeners, 2);
-        vp.removeFrameListener(f1);
-        XCTAssertEqual(vp.numFrameListeners, 1);
-        vp.removeFrameListener(f1);
-        XCTAssertEqual(vp.numFrameListeners, 1);
-        vp.removeFrameListener(f2);
-        XCTAssertEqual(vp.numFrameListeners, 0);
+        voiceProcessor.addFrameListener(frameListener1)
+        XCTAssertEqual(voiceProcessor.numFrameListeners, 1)
+        voiceProcessor.addFrameListener(frameListener2)
+        XCTAssertEqual(voiceProcessor.numFrameListeners, 2)
+        voiceProcessor.removeFrameListener(frameListener1)
+        XCTAssertEqual(voiceProcessor.numFrameListeners, 1)
+        voiceProcessor.removeFrameListener(frameListener1)
+        XCTAssertEqual(voiceProcessor.numFrameListeners, 1)
+        voiceProcessor.removeFrameListener(frameListener2)
+        XCTAssertEqual(voiceProcessor.numFrameListeners, 0)
 
-        let fs: [VoiceProcessorFrameListener] = [f1, f2];
-        vp.addFrameListeners(fs);
-        XCTAssertEqual(vp.numFrameListeners, 2);
-        vp.removeFrameListeners(fs);
-        XCTAssertEqual(vp.numFrameListeners, 0);
-        vp.addFrameListeners(fs);
-        XCTAssertEqual(vp.numFrameListeners, 2);
-        vp.clearFrameListeners();
-        XCTAssertEqual(vp.numFrameListeners, 0);
+        let frameListeners: [VoiceProcessorFrameListener] = [frameListener1, frameListener2]
+        voiceProcessor.addFrameListeners(frameListeners)
+        XCTAssertEqual(voiceProcessor.numFrameListeners, 2)
+        voiceProcessor.removeFrameListeners(frameListeners)
+        XCTAssertEqual(voiceProcessor.numFrameListeners, 0)
+        voiceProcessor.addFrameListeners(frameListeners)
+        XCTAssertEqual(voiceProcessor.numFrameListeners, 2)
+        voiceProcessor.clearFrameListeners()
+        XCTAssertEqual(voiceProcessor.numFrameListeners, 0)
 
-        vp.addErrorListener(e1);
-        XCTAssertEqual(vp.numErrorListeners, 1);
-        vp.addErrorListener(e2);
-        XCTAssertEqual(vp.numErrorListeners, 2);
-        vp.removeErrorListener(e1);
-        XCTAssertEqual(vp.numErrorListeners, 1);
-        vp.removeErrorListener(e1);
-        XCTAssertEqual(vp.numErrorListeners, 1);
-        vp.removeErrorListener(e2);
-        XCTAssertEqual(vp.numErrorListeners, 0);
-        vp.addErrorListener(e1);
-        XCTAssertEqual(vp.numErrorListeners, 1);
-        vp.clearErrorListeners();
-        XCTAssertEqual(vp.numErrorListeners, 0);
+        voiceProcessor.addErrorListener(errorListener1)
+        XCTAssertEqual(voiceProcessor.numErrorListeners, 1)
+        voiceProcessor.addErrorListener(errorListener2)
+        XCTAssertEqual(voiceProcessor.numErrorListeners, 2)
+        voiceProcessor.removeErrorListener(errorListener1)
+        XCTAssertEqual(voiceProcessor.numErrorListeners, 1)
+        voiceProcessor.removeErrorListener(errorListener1)
+        XCTAssertEqual(voiceProcessor.numErrorListeners, 1)
+        voiceProcessor.removeErrorListener(errorListener2)
+        XCTAssertEqual(voiceProcessor.numErrorListeners, 0)
+        voiceProcessor.addErrorListener(errorListener1)
+        XCTAssertEqual(voiceProcessor.numErrorListeners, 1)
+        voiceProcessor.clearErrorListeners()
+        XCTAssertEqual(voiceProcessor.numErrorListeners, 0)
     }
 }

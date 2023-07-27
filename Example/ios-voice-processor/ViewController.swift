@@ -16,10 +16,10 @@ class ViewController: UIViewController {
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var vuMeterView: VUMeterView!
 
-    private let FRAME_LENGTH: UInt32 = 512
-    private let SAMPLE_RATE: UInt32 = 16000
-    private let DUMP_AUDIO: Bool = false
-    
+    private let frameLength: UInt32 = 512
+    private let sampleRate: UInt32 = 16000
+    private let dumpAudio: Bool = false
+
     private var isRecording: Bool = false
     private var recordedAudio: [Int16] = []
 
@@ -30,39 +30,42 @@ class ViewController: UIViewController {
         let startButtonSize = CGSize(width: 120, height: 120)
 
         startButton.frame.size = startButtonSize
-        startButton.frame.origin =
-                CGPoint(x: (viewSize.width - startButtonSize.width) / 2, y: (viewSize.height - startButtonSize.height - 40))
+        startButton.frame.origin = CGPoint(
+                x: (viewSize.width - startButtonSize.width) / 2,
+                y: (viewSize.height - startButtonSize.height - 40))
         startButton.layer.cornerRadius = 0.5 * startButton.bounds.size.width
         startButton.clipsToBounds = true
 
         let vuMeterSize = CGSize(width: view.frame.width - 20, height: 80)
         vuMeterView.frame.size = vuMeterSize
-        vuMeterView.frame.origin = CGPoint(x: (viewSize.width - vuMeterSize.width) / 2, y: (viewSize.height - vuMeterSize.height) / 2)
+        vuMeterView.frame.origin = CGPoint(
+                x: (viewSize.width - vuMeterSize.width) / 2,
+                y: (viewSize.height - vuMeterSize.height) / 2)
         vuMeterView.clipsToBounds = true
-        
+
         let frameListener = VoiceProcessorFrameListener(audioCallback)
         VoiceProcessor.instance.addFrameListener(frameListener)
-        
+
         let errorListener = VoiceProcessorErrorListener(errorCallback)
         VoiceProcessor.instance.addErrorListener(errorListener)
     }
 
-    private func audioCallback(frame: [Int16]) -> Void {
-        if DUMP_AUDIO {
+    private func audioCallback(frame: [Int16]) {
+        if dumpAudio {
             recordedAudio.append(contentsOf: frame)
         }
 
         let sum = frame.reduce(0) { $0 + (Double($1) * Double($1)) }
         let rms = sqrt(sum / Double(frame.count))
-        
+
         let dbfs = 20 * log10(rms / Double(INT16_MAX))
-        
+
         DispatchQueue.main.async {
             self.vuMeterView.addVolumeValue(dbfsValue: dbfs)
         }
     }
-    
-    private func errorCallback(error: VoiceProcessorError) -> Void {
+
+    private func errorCallback(error: VoiceProcessorError) {
         DispatchQueue.main.async {
             let alert = UIAlertController(
                     title: "Alert",
@@ -72,7 +75,7 @@ class ViewController: UIViewController {
             self.present(alert, animated: true, completion: nil)
         }
     }
-    
+
     @IBAction func toggleStartButton(_ sender: UIButton) {
         if !isRecording {
             startRecording()
@@ -88,18 +91,18 @@ class ViewController: UIViewController {
                 return
             }
 
-            if DUMP_AUDIO {
+            if dumpAudio {
                 recordedAudio.removeAll()
             }
 
-            try VoiceProcessor.instance.start(frameLength: FRAME_LENGTH, sampleRate: SAMPLE_RATE)
+            try VoiceProcessor.instance.start(frameLength: frameLength, sampleRate: sampleRate)
         } catch {
             let alert = UIAlertController(
                     title: "Alert",
                     message: "Could not start voice processor.",
                     preferredStyle: UIAlertController.Style.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+            present(alert, animated: true, completion: nil)
             return
         }
         isRecording = true
@@ -115,12 +118,12 @@ class ViewController: UIViewController {
                     message: "Could not stop voice processor.",
                     preferredStyle: UIAlertController.Style.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+            present(alert, animated: true, completion: nil)
             return
         }
         isRecording = false
 
-        if DUMP_AUDIO {
+        if dumpAudio {
             do {
                 try dumpAudio(audioData: recordedAudio, audioFileName: "ios_voice_processor.wav")
             } catch {
@@ -130,7 +133,7 @@ class ViewController: UIViewController {
         startButton.setTitle("START", for: UIControl.State.normal)
     }
 
-    private func onUserPermissionResponse(isGranted: Bool) -> Void {
+    private func onUserPermissionResponse(isGranted: Bool) {
         DispatchQueue.main.async {
             if isGranted {
                 self.startRecording()
@@ -158,7 +161,7 @@ class ViewController: UIViewController {
         }
         let audioFormat = AVAudioFormat(
                 commonFormat: .pcmFormatInt16,
-                sampleRate: Double(SAMPLE_RATE),
+                sampleRate: Double(sampleRate),
                 channels: 1,
                 interleaved: true)!
 
@@ -175,4 +178,3 @@ class ViewController: UIViewController {
         try audioFile.write(from: writeBuffer)
     }
 }
-

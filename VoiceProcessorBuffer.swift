@@ -35,16 +35,17 @@ public class VoiceProcessorBuffer {
                 numOverwrite += 1
             }
         }
-        
+
         if numOverwrite > 0 {
             throw VoiceProcessorReadError("Buffer overflow occurred - \(numOverwrite) samples dropped.")
         }
     }
-    
+
     /// Reads a specified number of audio samples from the circular buffer.
     ///
     /// - Parameter count: The number of samples to read from the buffer.
-    /// - Returns: An array of audio samples read from the buffer. Will either be the requested amount, or however many are available if that is less than `count`.
+    /// - Returns: An array of audio samples read from the buffer.
+    ///   Will either be the requested amount, or however many are available if that is less than `count`.
     public func read(count: Int) -> [Int16] {
         var samples: [Int16] = []
 

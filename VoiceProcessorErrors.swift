@@ -15,13 +15,11 @@ public class VoiceProcessorError: LocalizedError {
     }
 
     public var errorDescription: String? {
-        return message
+        message
     }
 
     public var name: String {
-        get {
-            return String(describing: type(of: self))
-        }
+        String(describing: type(of: self))
     }
 }
 
@@ -30,4 +28,3 @@ public class VoiceProcessorArgumentError: VoiceProcessorError {}
 public class VoiceProcessorReadError: VoiceProcessorError {}
 
 public class VoiceProcessorRuntimeError: VoiceProcessorError {}
-
