@@ -42,13 +42,37 @@ class ViewController: UIViewController {
         
         let frameListener = VoiceProcessorFrameListener(audioCallback)
         VoiceProcessor.instance.addFrameListener(frameListener)
+        
+        let errorListener = VoiceProcessorErrorListener(errorCallback)
+        VoiceProcessor.instance.addErrorListener(errorListener)
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+    private func audioCallback(frame: [Int16]) -> Void {
+        if DUMP_AUDIO {
+            recordedAudio.append(contentsOf: frame)
+        }
 
+        let sum = frame.reduce(0) { $0 + (Double($1) * Double($1)) }
+        let rms = sqrt(sum / Double(frame.count))
+        
+        let dbfs = 20 * log10(rms / Double(INT16_MAX))
+        
+        DispatchQueue.main.async {
+            self.vuMeterView.addVolumeValue(dbfsValue: dbfs)
+        }
+    }
+    
+    private func errorCallback(error: VoiceProcessorError) -> Void {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(
+                    title: "Alert",
+                    message: "Voice processor error: \(error)",
+                    preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
     @IBAction func toggleStartButton(_ sender: UIButton) {
         if !isRecording {
             startRecording()
@@ -118,21 +142,6 @@ class ViewController: UIViewController {
                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             }
-        }
-    }
-
-    private func audioCallback(frame: [Int16]) -> Void {
-        if DUMP_AUDIO {
-            recordedAudio.append(contentsOf: frame)
-        }
-
-        let sum = frame.reduce(0) { $0 + (Double($1) * Double($1)) }
-        let rms = sqrt(sum / Double(frame.count))
-        
-        let dbfs = 20 * log10(rms / Double(INT16_MAX))
-        
-        DispatchQueue.main.async {
-            self.vuMeterView.addVolumeValue(dbfsValue: dbfs)
         }
     }
 
