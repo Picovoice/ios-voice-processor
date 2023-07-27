@@ -15,12 +15,14 @@ on:
       - 'example/**'
       - '!example/REAMDE.md'
 
+defaults:
+  run:
+    working-directory: example
+
 jobs:
-  build-demo:
+  build:
+    name: Build
     runs-on: macos-latest
-    defaults:
-      run:
-        working-directory: example
 
     steps:
       - name: Checkout
