@@ -94,7 +94,7 @@ do {
 Stop audio capture:
 ```swift
 do {
-    try voiceProcessor.stop(frameLength: 512, sampleRate: 16000);
+    try voiceProcessor.stop();
 } catch {
 }
 ```
