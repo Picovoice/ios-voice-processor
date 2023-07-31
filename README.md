@@ -3,8 +3,6 @@
 [![GitHub release](https://img.shields.io/github/release/Picovoice/ios-voice-processor.svg)](https://github.com/Picovoice/ios-voice-processor/releases)
 [![GitHub](https://img.shields.io/github/license/Picovoice/ios-voice-processor)](https://github.com/Picovoice/ios-voice-processor/)
 
-[![Maven Central](https://img.shields.io/maven-central/v/ai.picovoice/android-voice-processor?label=maven-central)](https://repo1.maven.org/maven2/ai/picovoice/android-voice-processor/)
-
 [![Cocoapods](https://img.shields.io/cocoapods/v/ios-voice-processor)](https://github.com/CocoaPods/Specs/tree/master/Specs/8/5/4/ios-voice-processor)
 
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
@@ -124,6 +122,12 @@ voiceProcessor.clearFrameListeners();
 The [iOS Voice Processor app](./example) demonstrates how to ask for user permissions and capture output from the `VoiceProcessor`.
 
 ## Releases
+
+### v1.1.0 - July 31, 2023
+- Numerous API improvements
+- Error handling improvements
+- Allow for multiple listeners instead of a single callback function
+- Upgrades to testing infrastructure and example app
 
 ### v1.0.0 - August 5, 2021
 
