@@ -1,0 +1,16 @@
+PODS:
+  - ios-voice-processor (1.1.0)
+
+DEPENDENCIES:
+  - ios-voice-processor (from `../`)
+
+EXTERNAL SOURCES:
+  ios-voice-processor:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  ios-voice-processor: 8e32d7f980a06d392d128ef1cd19cf6ddcaca3c1
+
+PODFILE CHECKSUM: f3172c9d85af56bf5f3c29596f2387f5961c52b6
+
+COCOAPODS: 1.11.3

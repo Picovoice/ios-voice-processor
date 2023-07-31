@@ -1,8 +1,0 @@
-use_frameworks!
-
-platform :ios, '9.0'
-
-target 'ios-voice-processor_Example' do
-  pod 'ios-voice-processor', :path => '../'
-
-end
