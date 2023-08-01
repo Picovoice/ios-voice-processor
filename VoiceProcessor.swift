@@ -14,6 +14,7 @@ public typealias VoiceProcessorFrameCallback = ([Int16]) -> Void
 
 /// Listener class for receiving audio frames from `VoiceProcessor` via the `onFrame` property.
 public class VoiceProcessorFrameListener {
+    private let lock = NSLock()
     private let callback_: VoiceProcessorFrameCallback
 
     /// Initializes a new `VoiceProcessorFrameListener`.
@@ -24,8 +25,13 @@ public class VoiceProcessorFrameListener {
     }
 
     /// Function called when a frame of audio is received.
-    public var onFrame: VoiceProcessorFrameCallback {
-        callback_
+    public func onFrame(_ frame: [Int16]) {
+        lock.lock()
+        defer {
+            lock.unlock()
+        }
+        callback_(frame)
+
     }
 }
 
@@ -34,6 +40,7 @@ public typealias VoiceProcessorErrorCallback = (VoiceProcessorError) -> Void
 
 /// Listener class for receiving errors from `VoiceProcessor` via the `onError` property.
 public class VoiceProcessorErrorListener {
+    private let lock = NSLock()
     private let callback_: VoiceProcessorErrorCallback
 
     /// Initializes a new `VoiceProcessorErrorListener`.
@@ -44,8 +51,10 @@ public class VoiceProcessorErrorListener {
     }
 
     /// Function called when a `VoiceProcessorError` occurs.
-    public var onError: VoiceProcessorErrorCallback {
-        callback_
+    public func onError(_ error: VoiceProcessorError) {
+        lock.lock()
+        callback_(error)
+        lock.unlock()
     }
 }
 
@@ -56,7 +65,8 @@ public class VoiceProcessor {
     /// The singleton instance of `VoiceProcessor`.
     public static let instance: VoiceProcessor = VoiceProcessor()
 
-    private let lock = NSLock()
+    private let executionLock = NSLock()
+    private let listenerLock = NSLock()
     private let numBuffers = 3
     private var audioQueue: AudioQueueRef!
     private var bufferList = [AudioQueueBufferRef?](repeating: nil, count: 3)
@@ -118,76 +128,76 @@ public class VoiceProcessor {
     ///
     /// - Parameter listener: The `VoiceProcessorFrameListener` to be added as a frame listener.
     public func addFrameListener(_ listener: VoiceProcessorFrameListener) {
-        lock.lock()
+        listenerLock.lock()
         frameListeners.append(listener)
-        lock.unlock()
+        listenerLock.unlock()
     }
 
     /// Adds multiple frame listeners to receive audio frames.
     ///
     /// - Parameter listeners: An array of `VoiceProcessorFrameListener` to be added as frame listeners.
     public func addFrameListeners(_ listeners: [VoiceProcessorFrameListener]) {
-        lock.lock()
+        listenerLock.lock()
         frameListeners.append(contentsOf: listeners)
-        lock.unlock()
+        listenerLock.unlock()
     }
 
     /// Removes a previously added frame listener.
     ///
     /// - Parameter listener: The `VoiceProcessorFrameListener` to be removed.
     public func removeFrameListener(_ listener: VoiceProcessorFrameListener) {
-        lock.lock()
+        listenerLock.lock()
         frameListeners.removeAll {
             $0 === listener
         }
-        lock.unlock()
+        listenerLock.unlock()
     }
 
     /// Removes previously added multiple frame listeners.
     ///
     /// - Parameter listeners: An array of `VoiceProcessorFrameListener` to be removed.
     public func removeFrameListeners(_ listeners: [VoiceProcessorFrameListener]) {
-        lock.lock()
+        listenerLock.lock()
         for listener in listeners {
             frameListeners.removeAll {
                 $0 === listener
             }
         }
-        lock.unlock()
+        listenerLock.unlock()
     }
 
     /// Clears all currently registered frame listeners.
     public func clearFrameListeners() {
-        lock.lock()
+        listenerLock.lock()
         frameListeners.removeAll()
-        lock.unlock()
+        listenerLock.unlock()
     }
 
     /// Adds an error listener.
     ///
     /// - Parameter listener: The `VoiceProcessorErrorListener` to be added as an error listener.
     public func addErrorListener(_ listener: VoiceProcessorErrorListener) {
-        lock.lock()
+        listenerLock.lock()
         errorListeners.append(listener)
-        lock.unlock()
+        listenerLock.unlock()
     }
 
     /// Removes a previously added error listener.
     ///
     /// - Parameter listener: The `VoiceProcessorErrorListener` to be removed.
     public func removeErrorListener(_ listener: VoiceProcessorErrorListener) {
-        lock.lock()
+        listenerLock.lock()
         errorListeners.removeAll {
             $0 === listener
         }
-        lock.unlock()
+        listenerLock.unlock()
     }
 
     /// Clears all error listeners.
     public func clearErrorListeners() {
-        lock.lock()
+        listenerLock.lock()
         errorListeners.removeAll()
-        lock.unlock()
+        listenerLock.unlock()
     }
 
     /// Starts audio recording with the specified audio properties.
@@ -197,6 +207,11 @@ public class VoiceProcessor {
     ///   - sampleRate: The sample rate to record audio at, in Hz.
     /// - Throws: An error if there is an issue starting the audio recording.
     public func start(frameLength: UInt32, sampleRate: UInt32) throws {
+        executionLock.lock()
+        defer {
+            executionLock.unlock()
+        }
+
         if frameLength == 0 {
             throw VoiceProcessorArgumentError("Frame length cannot be zero.")
         }
@@ -205,7 +220,6 @@ public class VoiceProcessor {
             throw VoiceProcessorArgumentError("Sample Rate cannot be zero.")
         }
 
-        circularBuffer = VoiceProcessorBuffer(size: Int(frameLength * 10))
         if isRecording_ {
             if frameLength != frameLength_ || sampleRate != sampleRate_ {
                 throw VoiceProcessorArgumentError("""
@@ -218,6 +232,7 @@ public class VoiceProcessor {
             }
         }
 
+        circularBuffer = VoiceProcessorBuffer(size: Int(frameLength * 10))
         frameLength_ = frameLength
         sampleRate_ = sampleRate
 
@@ -229,7 +244,6 @@ public class VoiceProcessor {
                     true,
                     options: .notifyOthersOnDeactivation)
         } catch {
-            print(error)
             throw VoiceProcessorRuntimeError("Unable to capture audio session.")
         }
 
@@ -262,9 +276,15 @@ public class VoiceProcessor {
     ///
     /// - Throws: An error if there is an issue stopping the audio recording.
     public func stop() throws {
+        executionLock.lock()
+        defer {
+            executionLock.unlock()
+        }
+
         if !isRecording_ {
             return
         }
+
         guard let audioQueue = audioQueue else {
             throw VoiceProcessorRuntimeError("Audio queue is nil")
         }
@@ -357,22 +377,22 @@ public class VoiceProcessor {
     }
 
     private func onFrame(_ frame: [Int16]) {
-        lock.lock()
+        listenerLock.lock()
         for listener in frameListeners {
             DispatchQueue.global().async {
                 listener.onFrame(frame)
             }
         }
-        lock.unlock()
+        listenerLock.unlock()
     }
 
     private func onError(_ error: VoiceProcessorError) {
-        lock.lock()
+        listenerLock.lock()
         for listener in errorListeners {
             DispatchQueue.global().async {
                 listener.onError(error)
             }
         }
-        lock.unlock()
+        listenerLock.unlock()
     }
 }
