@@ -53,8 +53,10 @@ public class VoiceProcessorErrorListener {
     /// Function called when a `VoiceProcessorError` occurs.
     public func onError(_ error: VoiceProcessorError) {
         lock.lock()
+        defer {
+            lock.unlock()
+        }
         callback_(error)
-        lock.unlock()
     }
 }
 
