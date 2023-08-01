@@ -14,7 +14,7 @@ public class VoiceProcessorError: LocalizedError {
         self.message = message
     }
 
-    public var errorDescription: String? {
+    public var errorDescription: String {
         message
     }
 
