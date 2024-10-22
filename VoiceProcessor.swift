@@ -1,5 +1,5 @@
 //
-//  Copyright 2021-2023 Picovoice Inc.
+//  Copyright 2021-2024 Picovoice Inc.
 //  You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 //  file accompanying this source.
 //  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
@@ -241,7 +241,7 @@ public class VoiceProcessor {
         do {
             try AVAudioSession.sharedInstance().setCategory(
                     AVAudioSession.Category.playAndRecord,
-                    options: [.mixWithOthers, .defaultToSpeaker, .allowBluetooth])
+                    options: [.mixWithOthers, .allowAirPlay, .allowBluetoothA2DP])
             try AVAudioSession.sharedInstance().setActive(
                     true,
                     options: .notifyOthersOnDeactivation)
