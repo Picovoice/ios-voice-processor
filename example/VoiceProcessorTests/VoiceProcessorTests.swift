@@ -25,10 +25,6 @@ class VoiceProcessorTests: XCTestCase {
         continueAfterFailure = false
     }
 
-    override func tearDown() {
-        super.tearDown()
-    }
-
     func testBasic() throws {
         let voiceProcessor = VoiceProcessor.instance
 
