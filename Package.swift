@@ -15,7 +15,6 @@ let package = Package(
     targets: [
         .target(
             name: "ios_voice_processor",
-            path: "src",
             linkerSettings: [
                 .linkedFramework("AVFoundation")
             ]
