@@ -17,7 +17,7 @@ let package = Package(
             name: "ios_voice_processor",
             dependencies: [],
             path: ".",
-            sources: ["VoiceProcessor.swift, VoiceProcessorBuffer.swift, VoiceProcessorErrors.swift"],
+            sources: ["VoiceProcessor.swift", "VoiceProcessorBuffer.swift", "VoiceProcessorErrors.swift"],
             linkerSettings: [
                 .linkedFramework("AVFoundation")
             ]
