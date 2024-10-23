@@ -8,14 +8,13 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "ios-voice-processor",
-            targets: ["ios-voice-processor"])
+            name: "ios_voice_processor",
+            targets: ["ios_voice_processor"])
     ],
     dependencies: [],
     targets: [
         .target(
-            name: "ios-voice-processor",
-            path: "src",
+            name: "ios_voice_processor",
             linkerSettings: [
                 .linkedFramework("AVFoundation")
             ]
