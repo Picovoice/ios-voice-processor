@@ -14,11 +14,10 @@ let package = Package(
     targets: [
         .target(
             name: "ios_voice_processor",
-            path: ".",
-            sources: ["VoiceProcessor.swift", "VoiceProcessorBuffer.swift", "VoiceProcessorErrors.swift"],
             linkerSettings: [
                 .linkedFramework("AVFoundation")
             ]
         )
-    ]
+    ],
+    swiftLanguageVersions: [.v5]
 )
