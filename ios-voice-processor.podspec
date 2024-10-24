@@ -10,7 +10,7 @@
 Pod::Spec.new do |s|
   s.name             = 'ios-voice-processor'
   s.module_name      = 'ios_voice_processor'
-  s.version          = '1.1.1'
+  s.version          = '1.1.2'
   s.summary          = 'An asynchronous iOS audio recording library designed for real-time speech audio processing.'
   s.description      = <<-DESC
   The iOS Voice Processor is an asynchronous audio capture library designed for real-time audio processing.
@@ -24,7 +24,7 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '11.0'
   s.swift_version = '5.0'
-  s.source_files = 'VoiceProcessor*.swift'
+  s.source_files = 'src/ios_voice_processor/VoiceProcessor*.swift'
   s.frameworks = 'AVFoundation'
 
 end
