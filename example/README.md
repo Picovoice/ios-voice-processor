@@ -9,7 +9,7 @@ This is an example app that demonstrates how to ask for user permissions and cap
 
 ## Compatibility
 
-- iOS 11.0+
+- iOS 13.0+
 
 ## Building
 

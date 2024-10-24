@@ -1,10 +1,10 @@
-// swift-tools-version:5.5
+// swift-tools-version:5.3
 import PackageDescription
 
 let package = Package(
     name: "ios-voice-processor",
     platforms: [
-        .iOS(.v11)
+        .iOS(.v13)
     ],
     products: [
         .library(
@@ -18,6 +18,5 @@ let package = Package(
                 .linkedFramework("AVFoundation")
             ]
         )
-    ],
-    swiftLanguageVersions: [.v5]
+    ]
 )
