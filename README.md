@@ -31,7 +31,7 @@ listeners.
 ## Requirements
 
 - [XCode](https://developer.apple.com/xcode/)
-- [CocoaPods](https://cocoapods.org/)
+- [SPM](https://www.swift.org/documentation/package-manager/) or [CocoaPods](https://cocoapods.org/)
 
 ## Compatibility
 
@@ -39,7 +39,14 @@ listeners.
 
 ## Installation
 
-iOS Voice Processor is available via CocoaPods. To import it into your iOS project, add the following line to your Podfile:
+iOS Voice Processor is available via the Swift Package Manager and CocoaPods. 
+
+To import the package using SPM, open up your project's Package Dependencies in XCode and add:
+```
+https://github.com/Picovoice/ios-voice-processor.git
+```
+
+To import it into your iOS project using CocoaPods, add the following line to your Podfile:
 ```ruby
 pod 'ios-voice-processor'
 ```
