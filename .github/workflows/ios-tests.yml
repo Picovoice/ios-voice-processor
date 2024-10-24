@@ -33,7 +33,7 @@ jobs:
       - name: XCode Build
         run: xcodebuild test
           -configuration Debug
-          -workspace ios-voice-processor.xcworkspace
+          -project ios-voice-processor.xcodeproj
           -sdk iphoneos
           -scheme ios-voice-processor-Example
           -destination "platform=iOS Simulator,name=iPhone 15"
