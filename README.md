@@ -35,7 +35,7 @@ listeners.
 
 ## Compatibility
 
-- iOS 11.0+
+- iOS 13.0+
 
 ## Installation
 
@@ -122,6 +122,10 @@ voiceProcessor.clearFrameListeners();
 The [iOS Voice Processor app](./example) demonstrates how to ask for user permissions and capture output from the `VoiceProcessor`.
 
 ## Releases
+
+### v1.2.0 - October 24, 2024
+- Add support for Swift Package Manager
+- Bumped minimum iOS version to 13
 
 ### v1.1.0 - July 31, 2023
 - Numerous API improvements
