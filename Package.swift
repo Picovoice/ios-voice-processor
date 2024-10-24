@@ -13,7 +13,10 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "ios_voice_processor"            
+            name: "ios_voice_processor",
+            linkerSettings: [
+                .linkedFramework("AVFoundation")
+            ]
         )
     ]
 )
