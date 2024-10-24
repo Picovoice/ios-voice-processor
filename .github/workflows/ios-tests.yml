@@ -30,12 +30,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install Cocoapods
-        run: gem install cocoapods
-
-      - name: Run Cocoapods
-        run: pod install
-
       - name: XCode Build
         run: xcodebuild test
           -configuration Debug
